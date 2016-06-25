@@ -46,6 +46,7 @@ $schedule = function(&$smartqq) {
 	//	'content' => date('Y-m-d H:i:s'),
 	// );
 	if (!file_exists('next.txt') || time() > (int)file_get_contents('next.txt')) {
+		file_put_contents('next.txt', time() + 86400);
 		foreach ($smartqq->friend['info'] as $info) {
 			if (false !== strpos($info['nick'], '干驴')) {
 				return array(
@@ -55,7 +56,6 @@ $schedule = function(&$smartqq) {
 				);
 			}
 		}
-		file_put_contents('next.txt', time() + 86400);
 	}
 	return false;
 };

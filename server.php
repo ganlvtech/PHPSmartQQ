@@ -37,25 +37,29 @@ for (;;) {
 		require 'callback_files.php';
 		if ($simplified_array['retcode'] == 0) {
 			foreach ($callback_files as &$callback_file) {
-				require $callback_file;
-				foreach ($simplified_array['result'] as &$single_msg) {
-					if (isset($callback) && $reply = $callback($single_msg, $smartqq)) {
-						if ($smartqq->send($single_msg['type'], $single_msg['from_uin'], $reply)) {
+				if (file_exists($callback_file)) {
+					require $callback_file;
+					foreach ($simplified_array['result'] as &$single_msg) {
+						if (isset($callback) && $reply = $callback($single_msg, $smartqq)) {
+							if ($smartqq->send($single_msg['type'], $single_msg['from_uin'], $reply)) {
+								$error_times = 0;
+							} else {
+								++$error_times;
+							}
+						}
+					}
+					if (isset($schedule) && $send_array = $schedule($smartqq)) {
+						if ($smartqq->send($send_array['type'], $send_array['to'], $send_array['content'])) {
 							$error_times = 0;
 						} else {
 							++$error_times;
 						}
 					}
+					if (isset($callback))
+						unset($callback);
+					if (isset($schedule))
+						unset($schedule);
 				}
-				if (isset($schedule) && $send_array = $schedule($smartqq)) {
-					if ($smartqq->send($send_array['type'], $send_array['to'], $send_array['content'])) {
-						$error_times = 0;
-					} else {
-						++$error_times;
-					}
-				}
-				unset($callback);
-				unset($schedule);
 			}
 		} else {
 			++$error_times;
