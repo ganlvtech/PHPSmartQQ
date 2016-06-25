@@ -148,7 +148,7 @@ class SmartQQ {
 	public function checkCookie() {
 		if (!file_exists(COOKIE_FILE))
 			return false;
-		if (1 !== preg_match('/ptwebqq\\t(.+?)\\r\\n/', file_get_contents(COOKIE_FILE), $matches))
+		if (1 !== preg_match('/ptwebqq\\t(.+?)\\r?\\n/', file_get_contents(COOKIE_FILE), $matches))
 			return false;
 		$this->ptwebqq = $matches[1];
 		log_record("ptwebqq : {$this->ptwebqq}");

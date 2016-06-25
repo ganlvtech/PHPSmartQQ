@@ -9,9 +9,9 @@ $callback = function(&$single_msg, &$smartqq) {
 	// $single_msg['time']      // 发送时间戳
 	// 返回empty为不回复，例如false, null, 0, ''
 	if (1 === preg_match('/^\s*PHPSmartQQ\s+--version\s*$/i', $single_msg['content']))
-		return 'PHPSmartQQ v1.0.0 by Ganlv(https://coding.net/u/ganlv/p/PHPSmartQQ/git)';
+		return 'PHPSmartQQ v1.0.1 by Ganlv(https://coding.net/u/ganlv/p/PHPSmartQQ/git)';
 	if (1 === preg_match('/^\s*PHPSmartQQ\s+--help\s*$/i', $single_msg['content']))
-		return "PHPSmartQQ help:\nA message start with an exclamatory mark can call the robot\nExample:\n!Who are you?";
+		return "PHPSmartQQ help:\nIn a group, a message start with an exclamatory mark can call the robot.\nExample:\n!How are you?\nChatting with the robot privately, you needn't to add an exclamatory mark.";
 	$first_char = mb_substr($single_msg['content'], 0, 1);
 	$is_command = ('!' === $first_char || '！' === $first_char);
 	if ($is_command || 0 === $single_msg['type']) {
@@ -48,7 +48,6 @@ $schedule = function(&$smartqq) {
 	if (!file_exists('next.txt') || time() > (int)file_get_contents('next.txt')) {
 		foreach ($smartqq->friend['info'] as $info) {
 			if (false !== strpos($info['nick'], '干驴')) {
-				file_put_contents('next.txt', time() + 60);
 				return array(
 					'type' => 0,
 					'to' => $info['uin'],
@@ -56,6 +55,7 @@ $schedule = function(&$smartqq) {
 				);
 			}
 		}
+		file_put_contents('next.txt', time() + 86400);
 	}
 	return false;
 };
