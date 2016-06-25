@@ -36,10 +36,10 @@ for (;;) {
 		$simplified_array = $smartqq->simplify($json_array);
 		require 'callback_files.php';
 		if ($simplified_array['retcode'] == 0) {
-			foreach ($simplified_array['result'] as &$single_msg) {
-				foreach ($callback_files as &$callback_file) {
-					require $callback_file;
-					if ($reply = $callback($single_msg)) {
+			foreach ($callback_files as &$callback_file) {
+				require $callback_file;
+				foreach ($simplified_array['result'] as &$single_msg) {
+					if (isset($callback) && $reply = $callback($single_msg, $smartqq)) {
 						if ($smartqq->send($single_msg['type'], $single_msg['from_uin'], $reply)) {
 							$error_times = 0;
 						} else {
@@ -47,13 +47,22 @@ for (;;) {
 						}
 					}
 				}
+				if (isset($schedule) && $send_array = $schedule($smartqq)) {
+					if ($smartqq->send($send_array['type'], $send_array['to'], $send_array['content'])) {
+						$error_times = 0;
+					} else {
+						++$error_times;
+					}
+				}
+				unset($callback);
+				unset($schedule);
 			}
 		} else {
 			++$error_times;
 		}
 		if ($error_times > MAX_ERROR_TIMES) {
-			echo "MAX_ERROR_TIMES reached\n";
-			exit;
+			echo "poll MAX_ERROR_TIMES reached\n";
+			break;
 		}
 	}
 }

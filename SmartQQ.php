@@ -25,7 +25,6 @@ function log_record($message) {
 		echo trim($message), "\n";
 }
 function curl($options) {
-	$ch = curl_init();
 	$options[CURLOPT_COOKIEFILE] = COOKIE_FILE;
 	$options[CURLOPT_COOKIEJAR] = COOKIE_FILE;
 	if (substr($options[CURLOPT_URL], 0, 8) === 'https://') {
@@ -39,6 +38,7 @@ function curl($options) {
 	$options[CURLOPT_MAXREDIRS] = 10;
 	$options[CURLOPT_TIMEOUT] = 120;
 	$options[CURLOPT_RETURNTRANSFER] = true;
+	$ch = curl_init();
 	curl_setopt_array($ch, $options);
 	if (APP_DEBUG) {
 		$cmd = 'curl "' . $options[CURLOPT_URL] . '" -b "' . COOKIE_FILE . '" -c "' . COOKIE_FILE . '"';
@@ -315,9 +315,9 @@ class SmartQQ {
 						}
 					}
 					if (!$from_name) {
-						foreach ($this->friend['info'] as $markname) {
-							if ($markname['uin'] === $from_uin) {
-								$from_name = $markname['nick'];
+						foreach ($this->friend['info'] as $info) {
+							if ($info['uin'] === $from_uin) {
+								$from_name = $info['nick'];
 								break;
 							}
 						}
