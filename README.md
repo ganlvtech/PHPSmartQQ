@@ -1,18 +1,21 @@
-#PHPSmartQQ
+# PHPSmartQQ
+
 * A php-based SmartQQ class
 * Author: Ganlv
 * **License: Apache License v2**
 
-##Instruction
+## Instruction
+
 1. Edit `callback_files.php` and `callback.php`
 2. Open `index.htm`
 3. Input `php server.php` in command-line mode
 4. Scan the QRCode
 5. OK, Let it run
 
-##Documentation
+## Documentation
 
-###SmartQQ class
+### SmartQQ class
+
     class SmartQQ {
         public $friend;   // 好友信息 
         public $group;    // 群信息
@@ -28,6 +31,8 @@
         public function send($type, $to, $content) {} // 发送消息
     }
 
-###server.php
-###callback_files.php
-###callback.php
+### server.php
+
+### callback_files.php
+
+### callback.php
